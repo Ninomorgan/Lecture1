@@ -3,7 +3,7 @@
 
 from dataclasses import dataclass
 
-from cliente import ClienteRecord
+from gestionale.cliente import ClienteRecord
 from prodotti import ProdottoRecord
 
 
