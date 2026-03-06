@@ -1,123 +1,44 @@
-prodottto1_nome = "laptop"
-prodotto1_prezzo = 1200.0
-prodotto1_quantita = 5
-
-prodottto2_nome = "Mouse"
-prodotto2_prezzo = 120
-prodotto2_quantita = 15
-
-valore_magazzino = prodotto1_quantita * prodotto1_prezzo + prodotto2_prezzo * prodotto2_quantita
-print(f" valore:{valore_magazzino}")
-
+from ordini import Ordine, OrdineSconto, RigaOrdine
 #METODI GETTER - SETTER
 #METODI PROTOCOL
 #METODI DATACLASS
 #SOTTOCLASSI E INHERITANCE
 
+#METODI PER IMPORTARE
+#1) from prodotti import ProdottoScontato
+#2) from prodotti import ProdottoScontato as ps --> lo chiamo ps
+#3) import prodotti
 
+#1)
+from prodotti import Prodotto, crea_prodotto_standar
+
+
+p1= Prodotto("ebook", 120.0, 1, "AAA")
+p2=crea_prodotto_standar("Tablet",750)
+
+print(p1)
+
+#2)
+from prodotti import ProdottoScontato as ps
+p3 = ps("cuffie", 230,1,"abc", 0.1)
+
+#3)
+import prodotti
+p4 = prodotti.ProdottoScontato("mp3", 230,1," AAA",0.2)
 
 
 # classe cliente con campi nome email e categoria(gold/silver/bronze) e metodo descrizione che restituisce una stringa con
 # cliente fulvio bianchi (gold) - fulvio@gmail
 
-class Cliente:
-    def __init__(self, name: str, email: str, categoria: str):
-        self.name = name
-        self.email = email
-        self._categoria = None #MODIFICO CATEGORIA IN _CATEGORIA
-        self.categoria = categoria #qua uso self.categoira
+from cliente import Cliente, ClienteRecord
 
-    @property
-    def categoria(self):
-        return self._categoria
-    @categoria.setter
-    def categoria(self, categoria):  #SE NON RIENTRA IN QUESTA CATEGORIA SARà UGUALE A NONE
-        categorie_valide = {"gold", "silver", "bronze"}
-        if categoria not in categorie_valide:
-           raise ValueError(f"Categoria invalida: scegliere fra gold silver bronze")
-        #if categoria=="gold":
-           # self._categoria = categoria
-        #if categoria=="silver":
-            #self._categoria = categoria
-        #if =="bronze":
-           # self._categoria = categoria
+c2= Cliente ("mario","mario@gmail.com", "Gold")
 
-
-
-
-    def descrizione(self):
-        return f"Cliente {self.name} ({self.categoria}) - {self.email}"
-
-   # @classmethod  # estende i metodi a tutte le istanze (esempio scrivere dei costruttori alternaitivi)
-   # def costruttore_con_quantita_1(cls, nome, email, categoria):
-    #    cls(nome, email="no", categoria)
-
-
-cliente1 = Cliente(name="Fulvio", email="fulvio@gmail.com", categoria="gold")
-print(cliente1.descrizione())
-
-
-#2) metodo getter del prodotto
-
-#3)MODIFICAIMO CATEGORIA E FACCIAMO CHE ACCETTI SOLO CATEORIA GOLD SILVER E BRONZE
-
-#INERITHANCE
-#SOTTOCLASSE PRODOTTO
-
-#DATACLASS -> genera in modo automatico queste cose
-from dataclasses import dataclass
-@dataclass
-class ProdottoRecord:
-    name: str
-    prezzo_unitario: float
-    #la classe avrà un costruttore automatico
-
-@dataclass
-class ClienteRecord:
-    name: str
-    email: str
-    categoria: str
-
-#gestiamo ordini
-@dataclass
-class RigaOrdine:
-    prodotto: ProdottoRecord
-    quantita: int
-
-    def totale_riga(self):
-        return self.prodotto.prezzo_unitario*self.quantita
-
-@dataclass
-class Ordine: #lista di ordini
-    righe: list[RigaOrdine]
-    cliente: ClienteRecord
-    iva=0.22
-
-    def totale_netto(self):
-        return sum(r.totale_riga() for r in self.righe)
-
-    def totale_lordo(self):
-        return self.totale_netto()*(1+self.iva)
-
-    def numero_righe(self):
-        return len(self.righe)
-
-@dataclass
-class OrdineSconto(Ordine):
-    sconto_percento: float
-
-    def totale_scontato(self):
-        return (1-self.sconto_percento)*self.totale_lordo()
-
-    #override method
-    def totale_netto(self):
-        netto_base= super().totale_netto() #PRENDIAMO IL METODO PRINCIPALE DALLA CLASSE PADRE
-        return netto_base*(1-self.sconto_percento)
 
 
 c1= ClienteRecord("Mario ROssi", "mariorossi@gmail.com", "Gold")
-p3 = ProdottoRecord("Laptop", 1200.0)
-p4 = ProdottoRecord("Mouse", 20)
+p3 = prodotti.ProdottoRecord("Laptop", 1200.0)
+p4 = prodotti.ProdottoRecord("Mouse", 20)
 
 ordine=Ordine([RigaOrdine(p3,2),RigaOrdine(p4,10)], c1)
 
@@ -131,10 +52,6 @@ print("---")
 print(ordine_scontato)
 print("totale scontato: ",ordine_scontato.totale_scontato())
 print("totale loro: " , ordine_scontato.totale_lordo())
-
-
-
-
 
 
 """
